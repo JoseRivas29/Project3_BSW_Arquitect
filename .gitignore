@@ -1,0 +1,8 @@
+.vscode/
+bsp/
+hal/
+os/
+app/08_UartBase/SAMV71_Xplained_Ultra/Debug
+app/08_UartBase/SAMV71_Xplained_Ultra/Progress.log
+app/08_UartBase/SAMV71_Xplained_Ultra/$STDERR.txt
+app/08_UartBase/SAMV71_Xplained_Ultra/$STDOUT.txt

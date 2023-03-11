@@ -29,11 +29,16 @@
 #include    "Uart.h"
 
 
+
 /*~~~~~~  Local definitions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*~~~~~~  Global variables ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+uint8_t 		u8SerialCtrl_TxData[] =
+{ "UARTs are transmiting\n\r\n\r" };
 
 
+/** UART pins (UTXD4 and URXD4) definitions */
+const Pin pPins[] = { PINS_UART4 };
 /*~~~~~~  Local functions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 /*----------------------------------------------------------------------------
@@ -61,10 +66,21 @@ extern int main( void )
     printf( "-- Button Control --\n\r" ) ;  
     ButtonCtrl_ConfigureSW0Button();
   
-    /* Uart Inititalization */
-    printf( "-- Uart Initialization --\n\r" ) ;
-    Uart_Init(&UartConfiguredChannels[0]);
-  
+	/* Uart Inititalization */
+	printf( "-- Uart Initialization --\n\r" ) ;
+
+	PMC_EnablePeripheral(ID_UART4);
+	
+	PIO_Configure(pPins, PIO_LISTSIZE(pPins));
+	Uart_Init(&UartConfig[0]);
+
+	NVIC_ClearPendingIRQ(UART4_IRQn); //BASE_IRQ is UART4_IRQn
+	NVIC_SetPriority(UART4_IRQn, 1);
+
+	Uart_SetTxEnable(UART_CFG_PHY_CHANNEL4, 1);
+
+	NVIC_EnableIRQ(UART4_IRQn); 
+	
 	/* Scheduler Inititalization */
 	printf( "-- Scheduler Initialization --\n\r" ) ;
 	SchM_Init(ScheduleConfig);
