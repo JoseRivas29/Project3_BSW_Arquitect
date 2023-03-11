@@ -19,10 +19,20 @@
   typedef struct
   {
     uint8_t ChannelId;
-    uint8_t Counter;
-    uint8_t TriggerCounter;
+
   }UartStatusType;
   
+  /*These errors provide the occurred error to upper layers through callback notifications*/
+  typedef enum {
+      UART_ERROR_OVERRUN,
+      UART_ERROR_FRAMING,
+      UART_ERROR_PARITY
+  }UartErrorType;
+
+  /*Function pointer for Uart TXand RX notifications to be used as part of the configuration containers*/
+  typedef void(*UartNotification)(void);
+  /*Function pointer for Uart error notifications to be used as part of the configuration containers*/
+  typedef void(*UartErrorNotification)(UartErrorType Error);
 
 /*============================================================================*/
 #endif /* UART_TYPES */

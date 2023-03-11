@@ -38,6 +38,11 @@ extern void UartCtrl_2ms( void );
 extern void UartCtrl_50ms( void );
 extern void UartCtrl_100ms( void );
 extern void UartCtrl_TriggerEvent( void );
+extern void vfnSerialCtrl_Transfer0();
+extern void vfnSerialCtrl_Transfer1();
+extern void vfnSerialCtrl_Transfer2();
+extern void vfnSerialCtrl_Transfer3();
+extern void vfnSerialCtrl_Transfer4();
 
 
 /**************************************************************************************************/

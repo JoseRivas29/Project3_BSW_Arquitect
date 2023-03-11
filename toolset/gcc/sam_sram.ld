@@ -77,22 +77,14 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > rom
+    } > ram
 
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > rom
-    PROVIDE_HIDDEN (__exidx_end = .);
-
-    . = ALIGN(4);
+    . = ALIGN(8);
     _etext = .;
 
     .relocate : AT (_etext)
     {
-        . = ALIGN(4);
+        . = ALIGN(8);
         _srelocate = .;
         *(.ramfunc .ramfunc.*);
         *(.data .data.*);
@@ -123,24 +115,6 @@ SECTIONS
         _estack = .;
     } > ram
 
-	/*----------------------------------------------------------------------------
- 	*        Start Memory map exercise 
- 	*----------------------------------------------------------------------------*/ 
-
-    /* heap memalloc section */
-    .heap_memalloc (NOLOAD):
-    {
-        . = ALIGN(4);
-         _heap_mem_start = .;
-        . = . + HEAP_MEMSIZE;
-        . = ALIGN(4);
-        _heap_mem_end = .;
-    } > heap_memalloc
-
-	/*----------------------------------------------------------------------------
- 	*        End Memory map exercise 
- 	*----------------------------------------------------------------------------*/ 
-    
     /* heap section */
     .heap (NOLOAD):
     {
@@ -150,6 +124,14 @@ SECTIONS
         . = ALIGN(8);
         _eheap = .;
     } > ram
+
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram
+    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;
