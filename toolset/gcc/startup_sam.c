@@ -40,8 +40,10 @@ extern uint32_t _szero;
 extern uint32_t _ezero;
 extern uint32_t _sstack;
 extern uint32_t _estack;
-extern uint8_t _heap_mem_start;
-extern uint8_t _heap_mem_end;
+
+/*Initialize segment for Mem Alloc*/
+extern uint32_t _heap_mem_start;
+extern uint32_t _heap_mem_end;
 
 /** \cond DOXYGEN_SHOULD_SKIP_THIS */
 int main(void);
@@ -335,8 +337,7 @@ __STATIC_INLINE void TCM_Disable(void)
  */
 void Reset_Handler(void)
 {
-	    uint32_t *pSrc, *pDest;
-        uint8_t *u8dst;
+		uint32_t *pSrc, *pDest;
 
 		/* Initialize the relocate segment */
 		pSrc = &_etext;
@@ -348,15 +349,18 @@ void Reset_Handler(void)
 				}
 		}
 
+		/* The startup code shall be updated so that the heap memory is set
+		 * to the value of zero.*/
+		for (pDest = &_heap_mem_start; pDest < &_heap_mem_end;) {
+			*pDest++ = 0;
+		}
+
+
 		/* Clear the zero segment */
 		for (pDest = &_szero; pDest < &_ezero;) {
 				*pDest++ = 0;
 		}
 
-    /* Clear my heap segment */
-		for (u8dst = &_heap_mem_start; u8dst < &_heap_mem_end;) {
-				*u8dst++ = 0;
-		}
 		/* Set the vector table base address */
 		pSrc = (uint32_t *) & _sfixed;
 		SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);

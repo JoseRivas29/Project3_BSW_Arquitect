@@ -38,12 +38,14 @@ OUTPUT_ARCH(arm)
 SEARCH_DIR(.)
 
 /* Memory Spaces Definitions */
+/* The heap_memalloc space shall be allocated at the RAM
+ * location 0x20400000. The total size of this space shall be 64KB.*/
 MEMORY
 {
-  rom (rx)           : ORIGIN = 0x00400000, LENGTH = 0x00200000
-  heap_memalloc(rwx) : ORIGIN = 0x20400000, LENGTH = 0x00010000
-  ram (rwx)          : ORIGIN = 0x20410000, LENGTH = 0x00050000
-  sdram(rwx)         : ORIGIN = 0x70000000, LENGTH = 0x00200000
+  rom (rx)			: ORIGIN = 0x00400000, LENGTH = 0x00200000
+  heap_memalloc(rwx): ORIGIN = 0x20400000, LENGTH = 0x00010000
+  ram (rwx)			: ORIGIN = 0x20410000, LENGTH = 0x00060000
+  sdram(rwx)		: ORIGIN = 0x70000000, LENGTH = 0x00200000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
@@ -52,7 +54,8 @@ STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : 0x2000;
 /* The heapsize used by the application. NOTE: you need to adjust according to your application. */
 HEAP_SIZE = DEFINED(HEAP_SIZE) ? HEAP_SIZE : 0x1000;
 
-heap_memsize = DEFINED(heap_memsize) ? heap_memsize : 0x2000;
+/* Heap_memsize 4KB*/
+HEAP_MEMSIZE = DEFINED(HEAP_MEMSIZE) ? HEAP_MEMSIZE : 0x1000;
 
 INCLUDE ..\..\..\toolset\gcc\sam_flash.ld
 INCLUDE ..\..\..\toolset\gcc\sam_sdram.ld

@@ -73,11 +73,11 @@ void SchM_Task_50ms( void )
 void SchM_Task_100ms( void )
 { 
   UartCtrl_100ms();
+  
 }
 
 /* List of tasks to be executed @ SW0 */
 void SchM_Task_SW0( void )
 {
   LedCtrl_ToogleBlinkingPattern();
-  UartCtrl_TriggerEvent();
 }
