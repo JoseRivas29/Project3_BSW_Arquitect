@@ -17,15 +17,20 @@
 #include "Std_Types.h"
 #include "Uart.h"
 
+
+#define UART_CTRL_MAX_CONFIG_CHANNELS	5
+
 /*****************************************************************************************************
 * Definition of module wide VARIABLEs 
 *****************************************************************************************************/
 uint8_t*    pu8SerialCtrl_RxDataPtr;
+uint16_t 		BuffLength;
 uint16_t 		BuffLength0;
 uint16_t 		BuffLength1;
 uint16_t 		BuffLength2;
 uint16_t 		BuffLength3;
 uint16_t 		BuffLength4;
+uint8_t*    ptrBuffer;
 uint8_t*    ptrBuffer0;
 uint8_t*    ptrBuffer1;
 uint8_t*    ptrBuffer2;
@@ -43,6 +48,14 @@ uint8_t 		Buffer3[] =
 uint8_t 		Buffer4[] =
 { "This is the UART4 at 115200 bps\n\r" };
 
+Uart_Ctrl_parameters_type Uart_Ctrl_parameters[UART_CTRL_MAX_CONFIG_CHANNELS] = 
+{
+	{UART_CFG_PHY_CHANNEL0, &Buffer0[0], sizeof(Buffer0)},
+	{UART_CFG_PHY_CHANNEL1, &Buffer1[0], sizeof(Buffer1)},
+	{UART_CFG_PHY_CHANNEL2, &Buffer2[0], sizeof(Buffer2)},
+	{UART_CFG_PHY_CHANNEL3, &Buffer3[0], sizeof(Buffer3)},
+	{UART_CFG_PHY_CHANNEL4, &Buffer4[0], sizeof(Buffer4)}
+};
 
 
 
@@ -66,124 +79,72 @@ void UartCtrl_50ms( void )
 
 void UartCtrl_100ms( void )
 {
-	UartCtrl_TriggerEvent();
+	UartCtrl_TriggerEvent( &Uart_Ctrl_parameters[0]);
 }
 
-void UartCtrl_TriggerEvent( void )
+void UartCtrl_TriggerEvent( Uart_Ctrl_parameters_type * Uart_Ctrl_param_ptr )
 {
-  //Initializing/reseting buffer of UART0 for testing
-	ptrBuffer0 = &Buffer0[0];
-	BuffLength0 = sizeof(Buffer0);
-	Uart_EnableInt(UART_CFG_PHY_CHANNEL0, UART_MASK_TXRDY, 1);
-  //Initializing/reseting buffer of UART1 for testing
-	ptrBuffer1 = &Buffer1[0];
-	BuffLength1 = sizeof(Buffer1);
-	Uart_EnableInt(UART_CFG_PHY_CHANNEL1, UART_MASK_TXRDY, 1);
-  //Initializing/reseting buffer of UART2 for testing
-	ptrBuffer2 = &Buffer2[0];
-	BuffLength2 = sizeof(Buffer2);
-	Uart_EnableInt(UART_CFG_PHY_CHANNEL2, UART_MASK_TXRDY, 1);
-  //Initializing/reseting buffer of UART3 for testing
-	ptrBuffer3 = &Buffer3[0];
-	BuffLength3 = sizeof(Buffer3);
-	Uart_EnableInt(UART_CFG_PHY_CHANNEL3, UART_MASK_TXRDY, 1);
-	//Initializing/reseting buffer of UART4 for testing
-	ptrBuffer4 = &Buffer4[0];
-	BuffLength4 = sizeof(Buffer4);
-	Uart_EnableInt(UART_CFG_PHY_CHANNEL4, UART_MASK_TXRDY, 1);
+	uint8_t channel_idx = 0;
 
+	for(channel_idx = 0 ; channel_idx < UART_CTRL_MAX_CONFIG_CHANNELS ; channel_idx++ ){
+		Uart_Ctrl_param_ptr[channel_idx].Buffer_len = sizeof(Uart_Ctrl_param_ptr[channel_idx].ptr2Buffer);
+		Uart_EnableInt(Uart_Ctrl_param_ptr[channel_idx].channel, UART_MASK_TXRDY, 1);
+	}
 }
+
+void vfnSerialCtrl_Transfer(Uart_Ctrl_parameters_type * Uart_Ctrl_ref_ptr)
+{
+	Uart_Ctrl_parameters_type local_parameters;
+
+	local_parameters.channel = Uart_Ctrl_ref_ptr->channel;
+	local_parameters.ptr2Buffer = (uint8_t *)Uart_Ctrl_ref_ptr->ptr2Buffer;
+	local_parameters.Buffer_len = Uart_Ctrl_ref_ptr->Buffer_len;
+
+	if (local_parameters.Buffer_len > 0)
+	{
+		/* Send out one byte at a time */
+		Uart_SendByteInt(local_parameters.channel, *local_parameters.ptr2Buffer);
+		/* point to next element */
+		local_parameters.ptr2Buffer++;
+		/* update number of pending bytes to transfer */
+		local_parameters.Buffer_len--;
+	}
+	else
+	{
+		//Disable the interruption once that done
+		Uart_EnableInt(local_parameters.channel, UART_MASK_TXRDY, 0);
+	}
+}
+
+Uart_Ctrl_parameters_type *vfnSerialCtrl_GetChannel_Parameters_Ptr(uint8_t channel)
+{
+	return &Uart_Ctrl_parameters[channel];
+};
 
 
 void vfnSerialCtrl_Transfer0(void)
 {
-	if (BuffLength0 > 0)
-	{
-		/* Send out one byte at a time */
-		Uart_SendByteInt(UART_CFG_PHY_CHANNEL0, *ptrBuffer0);
-		/* point to next element */
-		ptrBuffer0++;
-		/* update number of pending bytes to transfer */
-		BuffLength0--;
-	}
-	else
-	{
-		//Disable the interruption once that done
-		Uart_EnableInt(UART_CFG_PHY_CHANNEL0, UART_MASK_TXRDY, 0);
-	}
+	vfnSerialCtrl_Transfer((Uart_Ctrl_parameters_type *) vfnSerialCtrl_GetChannel_Parameters_Ptr(UART_CFG_PHY_CHANNEL0));
 }
 
 void vfnSerialCtrl_Transfer1(void)
 {
-	if (BuffLength1 > 0)
-	{
-		/* Send out one byte at a time */
-		Uart_SendByteInt(UART_CFG_PHY_CHANNEL1, *ptrBuffer1);
-		/* point to next element */
-		ptrBuffer1++;
-		/* update number of pending bytes to transfer */
-		BuffLength1--;
-	}
-	else
-	{
-		//Disable the interruption once that done
-		Uart_EnableInt(UART_CFG_PHY_CHANNEL1, UART_MASK_TXRDY, 0);
-	}
+	vfnSerialCtrl_Transfer((Uart_Ctrl_parameters_type *) vfnSerialCtrl_GetChannel_Parameters_Ptr(UART_CFG_PHY_CHANNEL1));
 }
 
 void vfnSerialCtrl_Transfer2(void)
 {
-	if (BuffLength2 > 0)
-	{
-		/* Send out one byte at a time */
-		Uart_SendByteInt(UART_CFG_PHY_CHANNEL2, *ptrBuffer2);
-		/* point to next element */
-		ptrBuffer2++;
-		/* update number of pending bytes to transfer */
-		BuffLength2--;
-	}
-	else
-	{
-		//Disable the interruption once that done
-		Uart_EnableInt(UART_CFG_PHY_CHANNEL2, UART_MASK_TXRDY, 0);
-	}
+	vfnSerialCtrl_Transfer((Uart_Ctrl_parameters_type *) vfnSerialCtrl_GetChannel_Parameters_Ptr(UART_CFG_PHY_CHANNEL2));
 }
 
 void vfnSerialCtrl_Transfer3(void)
 {
-	if (BuffLength3 > 0)
-	{
-		/* Send out one byte at a time */
-		Uart_SendByteInt(UART_CFG_PHY_CHANNEL3, *ptrBuffer3);
-		/* point to next element */
-		ptrBuffer3++;
-		/* update number of pending bytes to transfer */
-		BuffLength3--;
-	}
-	else
-	{
-		//Disable the interruption once that done
-		Uart_EnableInt(UART_CFG_PHY_CHANNEL3, UART_MASK_TXRDY, 0);
-	}
+	vfnSerialCtrl_Transfer((Uart_Ctrl_parameters_type *) vfnSerialCtrl_GetChannel_Parameters_Ptr(UART_CFG_PHY_CHANNEL3));
 }
 
 void vfnSerialCtrl_Transfer4(void)
 {
-	if (BuffLength4 > 0)
-	{
-		/* Send out one byte at a time */
-		Uart_SendByteInt(UART_CFG_PHY_CHANNEL4, *ptrBuffer4);
-
-		/* point to next element */
-		ptrBuffer4++;
-		/* update number of pending bytes to transfer */
-		BuffLength4--;
-	}
-	else
-	{
-		//Disable the interruption once that done
-		Uart_EnableInt(UART_CFG_PHY_CHANNEL4, UART_MASK_TXRDY, 0);  
-  }
+	vfnSerialCtrl_Transfer((Uart_Ctrl_parameters_type *) vfnSerialCtrl_GetChannel_Parameters_Ptr(UART_CFG_PHY_CHANNEL4));
 }
 
 

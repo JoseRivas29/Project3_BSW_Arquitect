@@ -84,13 +84,13 @@ extern int main( void )
 	PIO_Configure(pPins, PIO_LISTSIZE(pPins));
 	Uart_Init(&UartConfig[0]);
 
-	NVIC_ClearPendingIRQ(UART0_IRQn); //BASE_IRQ is UART4_IRQn
+	NVIC_ClearPendingIRQ(UART0_IRQn); //BASE_IRQ is UART0_IRQn
 	NVIC_SetPriority(UART0_IRQn, 1);
-	NVIC_ClearPendingIRQ(UART1_IRQn); //BASE_IRQ is UART4_IRQn
+	NVIC_ClearPendingIRQ(UART1_IRQn); //BASE_IRQ is UART1_IRQn
 	NVIC_SetPriority(UART1_IRQn, 1);
-	NVIC_ClearPendingIRQ(UART2_IRQn); //BASE_IRQ is UART4_IRQn
+	NVIC_ClearPendingIRQ(UART2_IRQn); //BASE_IRQ is UART2_IRQn
 	NVIC_SetPriority(UART2_IRQn, 1);
-	NVIC_ClearPendingIRQ(UART3_IRQn); //BASE_IRQ is UART4_IRQn
+	NVIC_ClearPendingIRQ(UART3_IRQn); //BASE_IRQ is UART3_IRQn
 	NVIC_SetPriority(UART3_IRQn, 1);
 	NVIC_ClearPendingIRQ(UART4_IRQn); //BASE_IRQ is UART4_IRQn
 	NVIC_SetPriority(UART4_IRQn, 1);
