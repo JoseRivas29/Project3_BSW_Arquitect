@@ -16,6 +16,7 @@
 
 	#define UART_CFG_CHANNELS (5)
 
+
 	#define UART_CFG_CHANNEL0  (0)
 	#define UART_CFG_CHANNEL1  (1)
 	#define UART_CFG_CHANNEL2  (2)

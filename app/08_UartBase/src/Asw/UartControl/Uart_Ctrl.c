@@ -21,6 +21,7 @@
 * Definition of module wide VARIABLEs 
 *****************************************************************************************************/
 uint8_t*    pu8SerialCtrl_RxDataPtr;
+
 uint16_t 		BuffLength0;
 uint16_t 		BuffLength1;
 uint16_t 		BuffLength2;
@@ -42,6 +43,7 @@ uint8_t 		Buffer3[] =
 { "This is the UART3 at 57600 bps\n\r" };
 uint8_t 		Buffer4[] =
 { "This is the UART4 at 115200 bps\n\r" };
+
 
 
 
@@ -178,6 +180,7 @@ void vfnSerialCtrl_Transfer4(void)
 		ptrBuffer4++;
 		/* update number of pending bytes to transfer */
 		BuffLength4--;
+
 	}
 	else
 	{
