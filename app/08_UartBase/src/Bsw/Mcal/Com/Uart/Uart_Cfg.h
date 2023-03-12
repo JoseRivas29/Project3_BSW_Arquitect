@@ -14,8 +14,7 @@
 	#include "Std_Types.h"
 	#include "Uart_Types.h"
 
-	#define UART_CFG_CHANNELS (5)
-
+	#define UART_CFG_CHANNELS (1)
 
 	#define UART_CFG_CHANNEL0  (0)
 	#define UART_CFG_CHANNEL1  (1)
