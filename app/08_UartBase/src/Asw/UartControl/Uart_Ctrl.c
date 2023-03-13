@@ -84,9 +84,9 @@ void UartCtrl_100ms( void )
 
 void UartCtrl_TriggerEvent( Uart_Ctrl_parameters_type * Uart_Ctrl_param_ptr )
 {
-	uint8_t channel_idx = 0;
+	uint8_t channel_idx = 1;
 
-	for(channel_idx = 0 ; channel_idx < UART_CTRL_MAX_CONFIG_CHANNELS ; channel_idx++ ){
+	for(channel_idx = 1 ; channel_idx < UART_CTRL_MAX_CONFIG_CHANNELS ; channel_idx++ ){
 		Uart_Ctrl_param_ptr[channel_idx].Buffer_len = sizeof(Uart_Ctrl_param_ptr[channel_idx].ptr2Buffer);
 		Uart_EnableInt(Uart_Ctrl_param_ptr[channel_idx].channel, UART_MASK_TXRDY, 1);
 	}
