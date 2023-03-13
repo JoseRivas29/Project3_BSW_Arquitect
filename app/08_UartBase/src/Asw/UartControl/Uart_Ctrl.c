@@ -94,25 +94,19 @@ void UartCtrl_TriggerEvent( Uart_Ctrl_parameters_type * Uart_Ctrl_param_ptr )
 
 void vfnSerialCtrl_Transfer(Uart_Ctrl_parameters_type * Uart_Ctrl_ref_ptr)
 {
-	Uart_Ctrl_parameters_type local_parameters;
-
-	local_parameters.channel = Uart_Ctrl_ref_ptr->channel;
-	local_parameters.ptr2Buffer = (uint8_t *)Uart_Ctrl_ref_ptr->ptr2Buffer;
-	local_parameters.Buffer_len = Uart_Ctrl_ref_ptr->Buffer_len;
-
-	if (local_parameters.Buffer_len > 0)
+	if (Uart_Ctrl_ref_ptr->Buffer_len > 0)
 	{
 		/* Send out one byte at a time */
-		Uart_SendByteInt(local_parameters.channel, *local_parameters.ptr2Buffer);
+		Uart_SendByteInt(Uart_Ctrl_ref_ptr->channel, *Uart_Ctrl_ref_ptr->ptr2Buffer);
 		/* point to next element */
-		local_parameters.ptr2Buffer++;
+		Uart_Ctrl_ref_ptr->ptr2Buffer++;
 		/* update number of pending bytes to transfer */
-		local_parameters.Buffer_len--;
+		Uart_Ctrl_ref_ptr->Buffer_len--;
 	}
 	else
 	{
 		//Disable the interruption once that done
-		Uart_EnableInt(local_parameters.channel, UART_MASK_TXRDY, 0);
+		Uart_EnableInt(Uart_Ctrl_ref_ptr->channel, UART_MASK_TXRDY, 0);
 	}
 }
 
