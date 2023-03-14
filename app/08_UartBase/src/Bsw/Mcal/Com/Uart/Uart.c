@@ -56,8 +56,12 @@ uint8_t Uart_GetLogChannel(uint8_t PhyChannel)
         {
             LogicalChannel = LocChIdx;
         }
+        else{
+          /*Nothing to do*/
+        }
         LocChIdx++;
-    } while ((UartCh[LocChIdx - 1].ChannelId != PhyChannel) && (LocChIdx < UART_CFG_CHANNELS));
+    } while ((LocChIdx < UART_CFG_CHANNELS));
+      //while((UartCh[LocChIdx - 1].ChannelId != PhyChannel) && (LocChIdx < UART_CFG_CHANNELS));
     return (LogicalChannel);
 }
 
@@ -207,14 +211,7 @@ Std_ReturnType Uart_SendBuffer(uint8_t Channel, uint8_t* Buffer, uint16_t Length
 *       uint8_t     Data received from the UART bus
 */
 uint8_t Uart_GetByte(uint8_t Channel) {
-    /*The function Uart_GetByte shall return the new byte received from the UART bus. If Rx callback notification is
-    configured, the UART module shall notify to the upper layer that a new data is ready to be read.
-    In order to get the new byte, the upper layer module shall:
-        � Read the status of the Uart channel from the Uart_GetStatus function.
-        � Be notified that the reception is finished from the callback notification.
-    Hint: Internal data status can be implemented to ensure that the driver has read the data (Rx interrupt enabled,
-    and Rx notification is not configured) and the UART HW module have received a new data.
-*/
+
 }
 
 /*  Reads and returns the current status of the addressed UART module*/

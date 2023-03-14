@@ -14,7 +14,8 @@
 	#include "Std_Types.h"
 	#include "Uart_Types.h"
 
-	#define UART_CFG_CHANNELS (1)
+	#define UART_CFG_CHANNELS (5)
+
 
 	#define UART_CFG_CHANNEL0  (0)
 	#define UART_CFG_CHANNEL1  (1)
@@ -51,25 +52,25 @@
 	#define UART_CFG_PARITY_NO		(4)
 
 	/*CLOCK CONFIGURATION DEFINES*/
-	#define UART_CFG_PER_CLK		(0)
-	#define	UART_CFG_PMC_CLK		(1)
+	#define UART_CFG_PER_CLK		(0)           // Peripheral Cloclk frencuncy
+	#define	UART_CFG_PMC_CLK		(1)           // Programmable Clock for peripheral
 
 	typedef struct {
-		uint8_t				ChannelId;				// Physical Uart Channel Identifier
-		uint8_t				IsrEn;					// Uart Interrupts enable(Transmission, Reception and Error)
-		uint8_t				Mode;					// Uart Channel Mode: 0:Normal / 1:Loopback
-		uint8_t				Parity;					// Parity Type= 0: Even / 1 : Odd
-		uint32_t			Baudrate;				// Specifies the baud rate of the Uart channel in bits per second
-		UartNotification	TxNotification;			// End of transmission notification
-		UartNotification	RxNotification;			// Data reception notification
+		uint8_t				ChannelId;				          // Physical Uart Channel Identifier
+		uint8_t				IsrEn;					            // Uart Interrupts enable(Transmission, Reception and Error)
+		uint8_t				Mode;					              // Uart Channel Mode: 0:Normal / 1:Loopback
+		uint8_t				Parity;				    	        // Parity Type= 0: Even / 1 : Odd
+		uint32_t			Baudrate;				            // Specifies the baud rate of the Uart channel in bits per second
+		UartNotification	TxNotification;		  	  // End of transmission notification
+		UartNotification	RxNotification;			    // Data reception notification
 		UartErrorNotification ErrorNotification;	// Error notification	
 	}UartChannelType;
 
 /*Configuration of the UART (Uart driver) module*/
 	typedef struct {
 		uint8_t			UartNumberOfChannels;		//Number of channels to be configured
-		uint8_t			ClkSrc;						//Clock Source:	0: Peripheral Clock	/ 1 : Programmable Clock
-		UartChannelType	*UartCh;				//Configuration of the UART (Uart driver) module
+		uint8_t			ClkSrc;						      //Clock Source:	0: Peripheral Clock	/ 1 : Programmable Clock
+		UartChannelType	*UartCh;				    //Configuration of the UART (Uart driver) module
 	}UartConfigType;
 
 
